@@ -1,0 +1,83 @@
+// Panigalli RH Consultoria - Modelo Lógico
+// Cole este código em https://dbdiagram.io/d para visualizar o diagrama
+
+Table empresa_cliente {
+  id_empresa int [pk, increment]
+  razao_social varchar(120) [not null]
+  cnpj char(14) [not null, unique]
+  ramo_atividade varchar(60) [not null]
+  email_contato varchar(120) [not null]
+  logradouro varchar(120) [not null]
+  numero varchar(10) [not null]
+  bairro varchar(60) [not null]
+  cidade varchar(60) [not null]
+  uf char(2) [not null]
+  cep char(8) [not null]
+  data_cadastro date [not null]
+}
+
+Table consultor {
+  id_consultor int [pk, increment]
+  nome varchar(100) [not null]
+  cpf char(11) [not null, unique]
+  email varchar(120) [not null, unique]
+  especialidade varchar(60) [not null]
+  salario decimal(10,2) [not null]
+  data_contratacao date [not null]
+}
+
+Table vaga {
+  id_vaga int [pk, increment]
+  id_empresa int [not null, ref: > empresa_cliente.id_empresa]
+  id_consultor int [not null, ref: > consultor.id_consultor]
+  titulo varchar(80) [not null]
+  area varchar(60) [not null]
+  salario decimal(10,2) [not null]
+  modalidade varchar(15) [not null]
+  data_abertura date [not null]
+  status varchar(15) [not null]
+}
+
+Table candidato {
+  id_candidato int [pk, increment]
+  nome varchar(100) [not null]
+  cpf char(11) [not null, unique]
+  email varchar(120) [not null, unique]
+  data_nascimento date [not null]
+  logradouro varchar(120) [not null]
+  numero varchar(10) [not null]
+  bairro varchar(60) [not null]
+  cidade varchar(60) [not null]
+  uf char(2) [not null]
+  cep char(8) [not null]
+}
+
+Table candidato_telefone {
+  id_telefone int [pk, increment]
+  id_candidato int [not null, ref: > candidato.id_candidato]
+  telefone varchar(15) [not null]
+  tipo varchar(15) [not null]
+}
+
+Table curriculo {
+  id_curriculo int [pk, increment]
+  id_candidato int [not null, unique, ref: - candidato.id_candidato]
+  escolaridade varchar(40) [not null]
+  area_formacao varchar(60) [not null]
+  anos_experiencia int [not null]
+  pretensao_salarial decimal(10,2) [not null]
+  data_atualizacao date [not null]
+}
+
+Table candidatura {
+  id_candidatura int [pk, increment]
+  id_candidato int [not null, ref: > candidato.id_candidato]
+  id_vaga int [not null, ref: > vaga.id_vaga]
+  data_candidatura date [not null]
+  status varchar(20) [not null]
+  nota_entrevista decimal(4,2)
+
+  indexes {
+    (id_candidato, id_vaga) [unique]
+  }
+}
